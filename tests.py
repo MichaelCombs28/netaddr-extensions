@@ -1,6 +1,8 @@
 import unittest
+
 from netaddr import IPRange
 from netaddr_extensions import utils
+from netaddr_extensions import classes
 
 
 class UtilsTestCase(unittest.TestCase):
@@ -49,6 +51,19 @@ class UtilsTestCase(unittest.TestCase):
         self.assertEqual(utils.get_address_range(
             '127.0.0.65/27'),
             ['127.0.0.65', '127.0.0.96'])
+
+
+class IrregularClassTest(unittest.TestCase):
+    def setUp(self):
+        # Enter the gateway address and prefix / netmask
+        self.irreg = classes.IrregularRange('202.69.250.65/27')
+
+    def test_properties(self):
+        irreg = self.irreg
+        self.assertIn('202.69.250.67', irreg)
+        self.assertEqual('202.69.250.65', irreg.first_addr)
+        self.assertEqual('202.69.250.96', irreg.last_addr)
+
 
 if __name__ == '__main__':
     unittest.main()
