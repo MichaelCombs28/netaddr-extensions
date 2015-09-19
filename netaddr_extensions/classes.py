@@ -11,7 +11,11 @@ class IrregularRange(IPRange):
         a_range = get_address_range(cidr)
         self.first_addr = a_range[0]
         self.last_addr = a_range[1]
+        self.cidr = cidr
         super(IrregularRange, self).__init__(self.first_addr, self.last_addr)
+
+    def __str__(self):
+        return self.cidr
 
     def usable_hosts(self):
         for address in self:
