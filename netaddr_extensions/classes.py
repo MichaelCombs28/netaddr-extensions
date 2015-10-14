@@ -12,7 +12,7 @@ class IrregularRange(IPRange):
         self.first_addr = a_range[0]
         self.last_addr = a_range[1]
         self.cidr = cidr
-        super(IrregularRange, self).__init__((self.first_addr+1), (self.last_addr-1))
+        super(IrregularRange, self).__init__(str(int(self.first_addr)+1), str((int(self.last_addr)-1)))
 
     def __str__(self):
         return self.cidr
