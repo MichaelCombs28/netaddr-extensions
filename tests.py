@@ -1,6 +1,6 @@
 import unittest
 
-from netaddr import IPRange
+from netaddr import IPRange, IPAddress
 from netaddr_extensions import funcs
 from netaddr_extensions import classes
 
@@ -28,7 +28,7 @@ class FuncsTestCase(unittest.TestCase):
         self.assertFalse(funcs.range_in_range(range2, range1))
 
     def test_conversions(self):
-        self.assertEqual(funcs.prefix_to_netmask(24), '255.255.255.0')
+        self.assertEqual(funcs.prefix_to_netmask(24), IPAddress('255.255.255.0'))
         self.assertRaises(ValueError, funcs.prefix_to_netmask(33))
 
         self.assertEqual(funcs.netmask_to_prefix('255.255.255.224'), 27)
@@ -45,7 +45,7 @@ class FuncsTestCase(unittest.TestCase):
         self.assertRaises(ValueError, funcs.get_address_range, '127.0.0.1')
         self.assertEqual(funcs.get_address_range(
             '127.0.0.0/23'),
-            ['127.0.0.1', '127.0.1.255']
+            ['127.0.0.0', '127.0.1.255']
         )
 
         self.assertEqual(funcs.get_address_range(
@@ -57,12 +57,20 @@ class IrregularClassTest(unittest.TestCase):
     def setUp(self):
         # Enter the gateway address and prefix / netmask
         self.irreg = classes.IrregularRange('202.69.250.65/27')
+        self.irreg2 = classes.IrregularRange('202.69.250.0/24')
+        self.irreg3 = classes.IrregularRange('202.69.250.64/27')
 
     def test_properties(self):
         irreg = self.irreg
+        irreg2 = self.irreg2
+        irreg3 = self.irreg3
         self.assertIn('202.69.250.67', irreg)
         self.assertEqual('202.69.250.65', irreg.first_addr)
         self.assertEqual('202.69.250.96', irreg.last_addr)
+        self.assertEqual('202.69.250.255', irreg2.last_addr)
+        self.assertEqual('202.69.250.95', irreg3.last_addr)
+
+        self.assertEqual(irreg.network_ip, '202.69.250.65')
 
 
 if __name__ == '__main__':

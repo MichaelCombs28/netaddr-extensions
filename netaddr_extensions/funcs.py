@@ -28,7 +28,7 @@ def range_overlap(range1, range2):
     :param: range1::IPRange
     :param: range2::IPRange
     """
-    return range1.first <= range2.last and range2.first <= range1.last
+    return range1.first < range2.last and range2.first <= range1.last
 
 
 def range_in_range(range1, range2):
@@ -38,10 +38,11 @@ def range_in_range(range1, range2):
     return range1.first >= range2.first and range1.last <= range2.last
 
 
-def prefix_to_netmask(prefix):
+def prefix_to_netmask(in_prefix):
+    prefix = int(in_prefix)
     if prefix > 32 or prefix <= 0:
         return None
-    return inet_ntoa(pack(">I", (0xffffffff << (32 - prefix)) & 0xffffffff))
+    return IPAddress(inet_ntoa(pack(">I", (0xffffffff << (32 - prefix)) & 0xffffffff)))
 
 
 def netmask_to_prefix(netmask):
@@ -95,7 +96,5 @@ def get_address_range(value):
     validate_cidr(value)
     split = value.split('/')
     first = IPAddress(split[0])
-    last = first + (netmask_to_hosts(split[1]) - 1)
-    if split[0][-1] == '0':
-        first += 1
+    last = first + ((netmask_to_hosts(split[1])) - 1)
     return [str(first), str(last)]
