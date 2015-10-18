@@ -1,19 +1,16 @@
-from setuptools import setup, find_packages
-from codecs import open
+from setuptools import setup
 from os import path
 
 here = path.abspath(path.dirname(__file__))
 
-with open(path.join(here, 'DESCRIPTION.rst'), encoding='utf-8') as f:
-    long_description = f.read()
-
 setup(
     name='netaddr_extensions',
+    package_dir={'': 'src'},
+    packages=['netaddr_extensions'],
 
     version='0.1',
 
     description='A set of extensions for netaddr',
-    long_description=long_description,
 
     url='https://github.com/MichaelCombs28/netaddr-extensions',
 
@@ -37,8 +34,6 @@ setup(
 
     # What does your project relate to?
     keywords='ipaddress netaddr cidr',
-
-    packages=find_packages(exclude=['contrib', 'docs', 'tests*']),
 
     # List run-time dependencies here.  These will be installed by pip when
     # your project is installed. For an analysis of "install_requires" vs pip's

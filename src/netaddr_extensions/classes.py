@@ -3,12 +3,22 @@ from netaddr_extensions.funcs import get_address_range, prefix_to_netmask
 
 
 class IrregularRange(IPRange):
-    """Takes an irregular cidr and calculates range
+    """
+
+    Takes an irregular cidr and calculates range
+    Most python modules don't support irregular range calculation without
+    needing to know the network and broadcast addresses.
+
+    This class allows you to input network/prefix and allow you
+    to correctly iterate through hosts in the range.
+
     """
     def __init__(self, cidr):
-        """Creates range object with Cidr
+        """
+        Creates range object with Cidr
 
-        cidr -- network_address/prefix eg. 123.0.0.0/24
+        :param cidr: network_address/prefix eg. 123.0.0.0/24
+
         """
         a_range = get_address_range(cidr)
         self.first_addr = a_range[0]
@@ -35,8 +45,7 @@ class IrregularRange(IPRange):
         return self.last_addr
 
     def iter_hosts(self):
-        """Generator for usable host addresses
-        """
+        """:return: Generator for usable host addresses"""
         if self.netmask >= IPAddress('255.255.255.254'):
             return
 

@@ -4,6 +4,13 @@ from struct import pack
 
 
 def is_netmask(value):
+    """
+    Checks if value is a netmask
+
+    :param value: int or str
+
+    :return: Bool
+    """
     try:
         if IPAddress(value).is_netmask():
             return True
@@ -13,6 +20,13 @@ def is_netmask(value):
 
 
 def is_prefix(value):
+    """
+    Checks if value is a prefix
+
+    :param value: int or str
+
+    :return: Bool
+    """
     try:
         prefix = int(value)
         if prefix > 0 and prefix <= 32:
@@ -25,8 +39,10 @@ def is_prefix(value):
 def range_overlap(range1, range2):
     """
     Checks if two ranges overlap.
-    :param: range1::IPRange
-    :param: range2::IPRange
+
+    :param range1: IPRange
+    :param range2: IPRange
+
     """
     return range1.first < range2.last and range2.first <= range1.last
 
@@ -39,6 +55,12 @@ def range_in_range(range1, range2):
 
 
 def prefix_to_netmask(in_prefix):
+    """
+    Converts a prefix into a netmask
+
+    :param in_prefix: Cidr prefix n <= 32
+    :return: Netmask value
+    """
     prefix = int(in_prefix)
     if prefix > 32 or prefix <= 0:
         return None
@@ -48,6 +70,8 @@ def prefix_to_netmask(in_prefix):
 def netmask_to_prefix(netmask):
     """
     Takes netmask and turns to prefix
+
+    :return: prefix as int
     """
     ip = IPAddress(netmask)
     if ip.is_netmask():
@@ -90,8 +114,10 @@ def validate_cidr(value):
 def get_address_range(value):
     """
     Returns tuple of first and last addresses.
-    :return: [gateway or network, broadcast]
-    /24 or higher will use .1 as the gateway
+
+    :param value: Cidr string
+
+    :return: (network address, broadcast) /24 or higher will use .1 as the gateway.
     """
     validate_cidr(value)
     split = value.split('/')
