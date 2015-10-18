@@ -13,7 +13,7 @@ class IrregularRange(IPRange):
         a_range = get_address_range(cidr)
         self.first_addr = a_range[0]
         self.last_addr = a_range[1]
-        self.network_size = int(IPAddress(self.last_addr) - IPAddress(self.first_addr))
+        self._network_size = int(IPAddress(self.last_addr) - IPAddress(self.first_addr))
         self.cidr = cidr
         self.netmask = prefix_to_netmask(cidr.split('/')[1])
         super(IrregularRange, self).__init__(self.first_addr, self.last_addr)
@@ -21,12 +21,17 @@ class IrregularRange(IPRange):
     def __str__(self):
         return self.cidr
 
+    def __len__(self):
+        return self._network_size
+
     @property
     def network_ip(self):
+        """Network IP"""
         return self.cidr.split('/')[0]
 
     @property
     def broadcast(self):
+        """Broadcast IP"""
         return self.last_addr
 
     def iter_hosts(self):
@@ -40,7 +45,7 @@ class IrregularRange(IPRange):
             if x == 0:
                 continue
             if (
-                x == self.network_size and
+                x == self._network_size and
                 words == 0 and
                 self.netmask <= IPAddress('255.255.255.0')
             ):
